@@ -122,8 +122,16 @@ function _VBA_isDateOrDateString(value) {
     }
   
     if (typeof value === 'string') {
-        const parsed = new Date(value);
-        return !isNaN(parsed.getTime());
+        //edit on 6/18/2025, previous codes could not strictly validate date strings
+        //previous codes: const parsed = new Date(value);
+        //previous codes: return !isNaN(parsed.getTime());
+
+        const regex = /^\s*(\d{1,2})\/(\d{1,2})\/(\d{4})\s*$/;
+        const match = input.match(regex);
+
+        if (match) {
+            return true;
+        }
     }
   
     return false;
