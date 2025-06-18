@@ -127,7 +127,7 @@ function _VBA_isDateOrDateString(value) {
         //previous codes: return !isNaN(parsed.getTime());
 
         const regex = /^\s*(\d{1,2})\/(\d{1,2})\/(\d{4})\s*$/;
-        const match = input.match(regex);
+        const match = value.match(regex);
 
         if (match) {
             return true;
