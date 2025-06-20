@@ -1,0 +1,1 @@
+import{a5 as o}from"./chunk.vendor.DXGcwdj3.js";import{C as e}from"./chunk.index.BhC4SCXi.js";import"./index.RyIKo0V9.js";import"./chunk.antd-vendor.TcWOth-p.js";function n(){return o.jsx(e,{pageName:"View/Manage Members"})}export{n as default};

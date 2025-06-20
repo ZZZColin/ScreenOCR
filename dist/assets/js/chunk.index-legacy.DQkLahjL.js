@@ -1,0 +1,1 @@
+System.register(["./chunk.vendor-legacy.BJJjiZ1D.js","./chunk.index-legacy.B8x6nLUk.js","./index-legacy.Djye7R0G.js","./chunk.antd-vendor-legacy.CAwSLbVj.js"],(function(e,n){"use strict";var t,u;return{setters:[e=>{t=e.a5},e=>{u=e.C},null,null],execute:function(){e("default",(function(){return t.jsx(u,{pageName:"Dashboard"})}))}}}));
