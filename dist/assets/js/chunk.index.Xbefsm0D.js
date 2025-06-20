@@ -1,0 +1,1 @@
+import{a5 as o}from"./chunk.vendor.DXGcwdj3.js";import{C as t}from"./chunk.index.1SknalK1.js";import"./index.DMQEXe07.js";import"./chunk.antd-vendor.TcWOth-p.js";function e(){return o.jsx(t,{pageName:"Dashboard"})}export{e as default};
