@@ -1,1 +1,0 @@
-import{a5 as o}from"./chunk.vendor.DXGcwdj3.js";import{C as t}from"./chunk.index.BhC4SCXi.js";import"./index.RyIKo0V9.js";import"./chunk.antd-vendor.TcWOth-p.js";function a(){return o.jsx(t,{pageName:"Maintenace History"})}export{a as default};
