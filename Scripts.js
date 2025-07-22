@@ -704,7 +704,11 @@ function VBA_FORMULA_OFN(OFN, OFNDict, VDict) {
             // 直接从其对应的IFN取值
             return VDict[source];
         } else {
-            var result = VDict[source];
+            if (!VDict[source]) {
+                // 如果VDict中没有source对应的值，不进行赋值
+            } else {
+                var result = VDict[source];
+            }
 
             if (mapping.length !== 0) {
                 result = _VBA_mapParse(mapping, VDict);
