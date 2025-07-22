@@ -1,32 +1,38 @@
 function VBA_FORMULA_HIDDEN_SECTIONS(VDict) {
     // VBA will ensure there is a specific key named "Dependent ID" in IFN
     // And the value of this key is a list of dependent IDs.
-    var specialKey = "Dependent ID";
-    var specialKeyCount = 0;
+    try {
+        var specialKey = "Dependent ID";
+        var specialKeyCount = 0;
 
-    if (!VDict[specialKey]) {
-        specialKeyCount = 0;
-    } else {
-        var specialKeyValue = VDict[specialKey];
-        if (Array.isArray(specialKeyValue)) {
-            specialKeyCount = specialKeyValue.length;
-        } else if (specialKeyValue === null || specialKeyValue === "") {
+        if (!VDict[specialKey]) {
             specialKeyCount = 0;
         } else {
-            specialKeyCount = 1;
+            var specialKeyValue = VDict[specialKey];
+            if (Array.isArray(specialKeyValue)) {
+                specialKeyCount = specialKeyValue.length;
+            } else if (specialKeyValue === null || specialKeyValue === "") {
+                specialKeyCount = 0;
+            } else {
+                specialKeyCount = 1;
+            }
         }
-    }
-    
-    var result = [];
-    // VBA will ensure the total # of dependent IDs is 15
-    // The dependent IDs are numbered from 1 to 15， like "Dependent_1", the second is "Dependent_2", and so on.
-    // And the dependent sections are named "Dependent_1", "Dependent_2", ..., "Dependent_15" as well.
-    for (let i = specialKeyCount + 1; i <= 15; i++) {
-        result.push("Dependent_" + i);
-    }
+        
+        var result = [];
+        // VBA will ensure the total # of dependent IDs is 15
+        // The dependent IDs are numbered from 1 to 15， like "Dependent_1", the second is "Dependent_2", and so on.
+        // And the dependent sections are named "Dependent_1", "Dependent_2", ..., "Dependent_15" as well.
+        for (let i = specialKeyCount + 1; i <= 15; i++) {
+            result.push("Dependent_" + i);
+        }
 
-    // This function will return a list of sections that are need to be hidden.
-    return result;
+        // This function will return a list of sections that are need to be hidden.
+        return result;
+    } catch (error) {
+        // console.error("Error in VBA_FORMULA_HIDDEN_SECTIONS:", error);
+        console.log('Error in VBA_FORMULA_HIDDEN_SECTIONS: ' + error.message);
+        return [];
+    }
 }
 
 function _VBA_formatDateByPattern(date, pattern) {
