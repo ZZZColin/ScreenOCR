@@ -343,7 +343,7 @@ true],
 }
 ,
 "Personal Information - Medicare HICN:":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -437,7 +437,7 @@ true],
 }
 ,
 "Personal Information - Address:*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 [
 "Personal Information - Address:*",
@@ -924,7 +924,7 @@ true],
 }
 ,
 "Department Number:":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -936,7 +936,7 @@ true],
 }
 ,
 "Has the Employee's Address Changed?* Yes":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -948,7 +948,7 @@ true],
 }
 ,
 "Has the Employee's Address Changed?* No":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -960,7 +960,7 @@ true],
 }
 ,
 "Has the Employee's Address Changed?* - Address:*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 [
 "Has the Employee's Address Changed?* - Address:*",
@@ -974,7 +974,7 @@ false]]
 }
 ,
 "Has the Employee's Address Changed?* - City:*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 [
 "Has the Employee's Address Changed?* - City:*",
@@ -988,7 +988,7 @@ false]]
 }
 ,
 "Has the Employee's Address Changed?* - State:*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 [
 "Has the Employee's Address Changed?* - State:*",
@@ -1002,7 +1002,7 @@ false]]
 }
 ,
 "Has the Employee's Address Changed?* - Zip Code:*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 [
 "Has the Employee's Address Changed?* - Zip Code:*",
@@ -1016,7 +1016,7 @@ false]]
 }
 ,
 "Date COBRA Billing Begins (Date BlueCross BlueShield of Tennessee starts billing COBRA participant):*":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -1028,7 +1028,7 @@ false]]
 }
 ,
 "Contact Information for COBRA Questions: Contact Name:":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -1040,7 +1040,7 @@ false]]
 }
 ,
 "Contact Information for COBRA Questions:  Telephone No1":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -1052,7 +1052,7 @@ false]]
 }
 ,
 "Contact Information for COBRA Questions:  Telephone No2":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,
@@ -1064,7 +1064,7 @@ false]]
 }
 ,
 "Contact Information for COBRA Questions:  Telephone No3":{
-"Source Key in IFN":"",
+"Source Key in IFN":"N/A",
 "Mapping":[
 ]
 ,

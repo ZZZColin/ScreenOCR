@@ -294,6 +294,14 @@ const VBA_IFN =
 }
 }
 ,
+"N/A":{
+"Section Name":"",
+"Subsection Name":"",
+"Name in EN":"N/A",
+"Filter":{
+}
+}
+,
 "EE Address 1 - Mailing":{
 "Section Name":"Section: EmployeeDataSheet_EmployeeAddresses",
 "Subsection Name":"",
