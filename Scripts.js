@@ -707,7 +707,7 @@ function VBA_FORMULA_OFN(OFN, OFNDict, VDict) {
             return VDict[source];
         } else {
             if (!VDict[source]) {
-                // 如果VDict中没有source对应的值，不进行赋值
+                var result = null;
             } else {
                 var result = VDict[source];
             }
