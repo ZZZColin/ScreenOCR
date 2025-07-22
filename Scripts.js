@@ -513,8 +513,10 @@ function _VBA_calculationParse(calculation, VDict) {
 }
 
 function _VBA_locateINEE(IFN, IFNDict, EE) {
-    // 从IFNDict中取到的section name和sub section name
-    // 都会包含Section: 或Subsection: 这样的前缀，需要去掉
+    if (!IFNDict[IFN]) {
+        return null;
+    }
+
     var sectionName = IFNDict[IFN]['Section Name'];
     var subsectionName = IFNDict[IFN]['Subsection Name'];
     var nameInEN = IFNDict[IFN]['Name in EN'];
