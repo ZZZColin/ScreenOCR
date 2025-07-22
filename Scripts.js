@@ -31,27 +31,41 @@ function VBA_FORMULA_HIDDEN_SECTIONS(VDict) {
 
 function _VBA_formatDateByPattern(date, pattern) {
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-        // throw new Error('Invalid date');
         console.log('Invalid date: ' + date);
         return null;
     }
 
     const day = date.getDate();
-    const month = date.getMonth() + 1; // 月份从0开始
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
   
     const replacements = {
-        'DD': String(day).padStart(2, '0'),
+        'DD': String(day).padStart(2, '0'), //make sure day is always two digits
         'D': String(day),
-        'MM': String(month).padStart(2, '0'),
+        'MM': String(month).padStart(2, '0'),//make sure month is always two digits
         'M': String(month),
         'YYYY': String(year),
         'YY': String(year).slice(-2),
     };
-  
-    // 正则替换每一个标记
+
+    //// -------------------------------------------------------------------------------------------------------------------
+    //// Start ---- Fernando updated on 07/21/2025 to support more whole date formats
+    // Common date formats for whole date
+    replacements['MM/DD/YYYY'] = `${replacements.MM}/${replacements.DD}/${replacements.YYYY}`;
+    replacements['DD/MM/YYYY'] = `${replacements.DD}/${replacements.MM}/${replacements.YYYY}`;
+    replacements['YYYY-MM-DD'] = `${replacements.YYYY}-${replacements.MM}-${replacements.DD}`;
+
+    // if the pattern is a common date format, return it directly
+    if (replacements.hasOwnProperty(pattern)) {
+        return replacements[pattern];
+    }
+    //// End ----- Update on 07/21/2025 to support more date formats
+    //// ------------------------------------------------------------------------------------------------------------------
+
+    // Otherwise, replace the pattern with the replacements
     return pattern.replace(/YYYY|YY|MM|M|DD|D/g, match => replacements[match]);
 }
+
 
 function _VBA_filterStringByFormat(input, format) {
     if (typeof input !== 'string' && typeof input !== 'number') {
@@ -536,123 +550,131 @@ function _VBA_locateINEE(IFN, IFNDict, EE) {
 }
 
 function VBA_FORMULA_IFN(IFN, IFNDict, EE, VDict) {
-    if (IFN.startsWith("\u200B")) {IFN = IFN.substring(1);}
+    try {
+        if (IFN.startsWith("\u200B")) {IFN = IFN.substring(1);}
 
-    var filter = IFNDict[IFN]['Filter'];
+        var filter = IFNDict[IFN]['Filter'];
 
-    if (Object.keys(filter).length === 0) {
-        return _VBA_locateINEE(IFN, IFNDict, EE);
-    } else {
-        var matchIndex = [];
-        var fieldIndex = 0;
+        if (Object.keys(filter).length === 0) {
+            return _VBA_locateINEE(IFN, IFNDict, EE);
+        } else {
+            var matchIndex = [];
+            var fieldIndex = 0;
 
-        for (let field in filter) {
-            var originKeyWordArr = filter[field];
-            if (!Array.isArray(originKeyWordArr)) {originKeyWordArr = [originKeyWordArr];}
+            for (let field in filter) {
+                var originKeyWordArr = filter[field];
+                if (!Array.isArray(originKeyWordArr)) {originKeyWordArr = [originKeyWordArr];}
 
-            if (field.startsWith("\u200B")) {field = field.substring(1);}
-            var options = _VBA_locateINEE(field, IFNDict, EE);
-            if (options === null) {
-                return null;
-            }
-            if (!Array.isArray(options)) {options = [options];}
-            
-            var keyWordArr = [];
+                if (field.startsWith("\u200B")) {field = field.substring(1);}
+                var options = _VBA_locateINEE(field, IFNDict, EE);
+                if (options === null) {
+                    return null;
+                }
+                if (!Array.isArray(options)) {options = [options];}
+                
+                var keyWordArr = [];
 
-            for (let keyWord of originKeyWordArr) {
-                if (keyWord.startsWith("\u200B")) {
-                    keyWord = keyWord.substring(1);
-                    if (VDict[keyWord] === null) {
-                        continue;
-                    }
-                    if (Array.isArray(VDict[keyWord])) {
-                        for (let v of VDict[keyWord]) {
-                            keyWordArr.push(v);
+                for (let keyWord of originKeyWordArr) {
+                    if (keyWord.startsWith("\u200B")) {
+                        keyWord = keyWord.substring(1);
+                        if (VDict[keyWord] === null) {
+                            continue;
                         }
-                    } else {
-                        keyWordArr.push(VDict[keyWord]);
-                    }
-                } else if (keyWord === "<Value>") {
-                    if (Array.isArray(VDict[field])) {
-                        for (let v of VDict[field]) {
-                            keyWordArr.push(v);
+                        if (Array.isArray(VDict[keyWord])) {
+                            for (let v of VDict[keyWord]) {
+                                keyWordArr.push(v);
+                            }
+                        } else {
+                            keyWordArr.push(VDict[keyWord]);
                         }
+                    } else if (keyWord === "<Value>") {
+                        if (Array.isArray(VDict[field])) {
+                            for (let v of VDict[field]) {
+                                keyWordArr.push(v);
+                            }
+                        } else {
+                            keyWordArr.push(VDict[field]);
+                        }
+                    } else if (keyWord === "<Empty>") {
+                        keyWordArr.push("");
                     } else {
-                        keyWordArr.push(VDict[field]);
+                        keyWordArr.push(keyWord);
                     }
-                } else if (keyWord === "<Empty>") {
-                    keyWordArr.push("");
+                }
+
+                let currentMatchIndex = [];
+                for (let index = 0; index < options.length; index++) {
+                    let option = options[index];
+                    if (keyWordArr.includes(option) || (keyWordArr.includes("<Not Empty>") && (option !== "" && option !== null))) {
+                        if (fieldIndex === 0) {
+                            matchIndex.push(index);
+                        }
+                        currentMatchIndex.push(index);
+                    }
+                }
+                if (currentMatchIndex.length === 0) {
+                    return null;
                 } else {
-                    keyWordArr.push(keyWord);
+                    matchIndex = currentMatchIndex.filter(item => (new Set(matchIndex)).has(item));
                 }
+                fieldIndex++;
             }
 
-            let currentMatchIndex = [];
-            for (let index = 0; index < options.length; index++) {
-                let option = options[index];
-                if (keyWordArr.includes(option) || (keyWordArr.includes("<Not Empty>") && (option !== "" && option !== null))) {
-                    if (fieldIndex === 0) {
-                        matchIndex.push(index);
-                    }
-                    currentMatchIndex.push(index);
-                }
-            }
-            if (currentMatchIndex.length === 0) {
+            var result = [];
+            var retrieveField = _VBA_locateINEE(IFN, IFNDict, EE);
+
+            if (matchIndex.length === 0) {
                 return null;
-            } else {
-                matchIndex = currentMatchIndex.filter(item => (new Set(matchIndex)).has(item));
             }
-            fieldIndex++;
-        }
 
-        var result = [];
-        var retrieveField = _VBA_locateINEE(IFN, IFNDict, EE);
-
-        if (matchIndex.length === 0) {
-            return null;
-        }
-
-        for (let index of matchIndex) {
-            if (Array.isArray(retrieveField)) {
-                if (index < retrieveField.length) {
-                    if (_VBA_isDateOrDateString(retrieveField[index])) {
-                        result.push(new Date(retrieveField[index]));
+            for (let index of matchIndex) {
+                if (Array.isArray(retrieveField)) {
+                    if (index < retrieveField.length) {
+                        if (_VBA_isDateOrDateString(retrieveField[index])) {
+                            result.push(new Date(retrieveField[index]));
+                        } else {
+                            result.push(retrieveField[index]);
+                        }
+                    }
+                } else {
+                    if (index === 0) {
+                        if (_VBA_isDateOrDateString(retrieveField)) {
+                            retrieveField = new Date(retrieveField);
+                            result.push(retrieveField);
+                        } else {
+                            result.push(retrieveField);
+                        }
                     } else {
-                        result.push(retrieveField[index]);
+                        return null;
                     }
                 }
-            } else {
-                if (index === 0) {
-                    if (_VBA_isDateOrDateString(retrieveField)) {
-                        retrieveField = new Date(retrieveField);
-                        result.push(retrieveField);
-                    } else {
-                        result.push(retrieveField);
-                    }
+            }
+
+            // Dependent ID特殊处理
+            if (IFN.startsWith("Dependent ID") && IFN !== "Dependent ID") {
+                // 这种语法只会替换掉第一个匹配项！
+                var dependentID_Index = parseInt(IFN.replace("Dependent ID_", "")) - 1;
+                if (result.length > dependentID_Index) {
+                    return result[dependentID_Index];
                 } else {
                     return null;
                 }
             }
-        }
 
-        // Dependent ID特殊处理
-        if (IFN.startsWith("Dependent ID") && IFN !== "Dependent ID") {
-            // 这种语法只会替换掉第一个匹配项！
-            var dependentID_Index = parseInt(IFN.replace("Dependent ID_", "")) - 1;
-            if (result.length > dependentID_Index) {
-                return result[dependentID_Index];
-            } else {
+            if (result.length === 1) {
+                return result[0];
+            } else if (result.length === 0) {
                 return null;
+            } else {
+                // edit on 6/19/2025, reason: previous codes could not remove duplicate values
+                // previous codes: return result;
+                return [...new Set(result)];
             }
         }
-
-        if (result.length === 1) {
-            return result[0];
-        } else if (result.length === 0) {
-            return null;
-        } else {
-            return result;
-        }
+    } catch (error) {
+        // console.error("Error in VBA_FORMULA_IFN:", error);
+        console.log('Error in VBA_FORMULA_IFN: ' + error.message);
+        return null;
     }
 }
 
@@ -666,52 +688,57 @@ function VBA_FORMULA_OFN(OFN, OFNDict, VDict) {
     // format
     
     // <Empty> <Ignore> <Not Empty>
+    try {
+        var source = OFNDict[OFN]["Source Key in IFN"];
+        var mapping = OFNDict[OFN]["Mapping"];
+        var calculation = OFNDict[OFN]["Calculation"];
+        var format = OFNDict[OFN]["Format"];
 
-    var source = OFNDict[OFN]["Source Key in IFN"];
-    var mapping = OFNDict[OFN]["Mapping"];
-    var calculation = OFNDict[OFN]["Calculation"];
-    var format = OFNDict[OFN]["Format"];
+        if (mapping.length === 0 && calculation.length === 0 && Object.keys(format).length === 0) {
+            // 直接从其对应的IFN取值
+            return VDict[source];
+        } else {
+            var result = VDict[source];
 
-    if (mapping.length === 0 && calculation.length === 0 && Object.keys(format).length === 0) {
-        // 直接从其对应的IFN取值
-        return VDict[source];
-    } else {
-        var result = VDict[source];
+            if (mapping.length !== 0) {
+                result = _VBA_mapParse(mapping, VDict);
+            }
 
-        if (mapping.length !== 0) {
-            result = _VBA_mapParse(mapping, VDict);
-        }
+            if (calculation.length !== 0) {
+                result = _VBA_calculationParse(calculation, VDict);
+            }
 
-        if (calculation.length !== 0) {
-            result = _VBA_calculationParse(calculation, VDict);
-        }
-
-        if (Object.keys(format).length !== 0) {
-            // _VBA_formatDateByPattern
-            // _VBA_filterStringByFormat
-            // _VBA_sliceByPosition
-            // _VBA_formatStringByCase
-            
-            for (let innerFormat in format) {
-                switch (innerFormat) {
-                    case "Date Format":
-                        result = _VBA_formatDateByPattern(result, format[innerFormat]);
-                        break;
-                    case "Text Clean":
-                        result = _VBA_filterStringByFormat(result, format[innerFormat]);
-                        break;
-                    case "Text Split":
-                        var start = parseInt(format[innerFormat][0]);
-                        var end = parseInt(format[innerFormat][1]);
-                        result = _VBA_sliceByPosition(result, start, end);
-                        break;
-                    case "Text Cap":
-                        result = _VBA_formatStringByCase(result, format[innerFormat]);
+            if (Object.keys(format).length !== 0) {
+                // _VBA_formatDateByPattern
+                // _VBA_filterStringByFormat
+                // _VBA_sliceByPosition
+                // _VBA_formatStringByCase
+                
+                for (let innerFormat in format) {
+                    switch (innerFormat) {
+                        case "Date Format":
+                            result = _VBA_formatDateByPattern(result, format[innerFormat]);
+                            break;
+                        case "Text Clean":
+                            result = _VBA_filterStringByFormat(result, format[innerFormat]);
+                            break;
+                        case "Text Split":
+                            var start = parseInt(format[innerFormat][0]);
+                            var end = parseInt(format[innerFormat][1]);
+                            result = _VBA_sliceByPosition(result, start, end);
+                            break;
+                        case "Text Cap":
+                            result = _VBA_formatStringByCase(result, format[innerFormat]);
+                    }
                 }
             }
-        }
 
-        return result;
+            return result;
+        }
+    } catch (error) {
+        // console.error("Error in VBA_FORMULA_OFN:", error);
+        console.log('Error in VBA_FORMULA_OFN: ' + error.message);
+        return null;
     }
 }
 
