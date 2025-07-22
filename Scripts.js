@@ -743,48 +743,54 @@ function VBA_FORMULA_OFN(OFN, OFNDict, VDict) {
 }
 
 function VBA_FORMULA_ALERT(OFN, AlertDict, VDict) {
-    //'Alert: this is error; Reminder: this is reminder'
-    if (!AlertDict[OFN]) {
-        return null;
-    }
-    var mapping = AlertDict[OFN]["Mapping"];
-    var calculation = AlertDict[OFN]["Calculation"];
+    try {
+        //'Alert: this is error; Reminder: this is reminder'
+        if (!AlertDict[OFN]) {
+            return null;
+        }
+        var mapping = AlertDict[OFN]["Mapping"];
+        var calculation = AlertDict[OFN]["Calculation"];
 
-    if (mapping.length === 0 && calculation.length === 0) {
-        return null;
-    } else {
-        var wording = null;
+        if (mapping.length === 0 && calculation.length === 0) {
+            return null;
+        } else {
+            var wording = null;
 
-        if (mapping.length !== 0) {
-            for (let index = 0; index < mapping.length; index++) {
-                var innerMapping = mapping[index];
-                var innerWording = _VBA_mapParse(innerMapping, VDict);
+            if (mapping.length !== 0) {
+                for (let index = 0; index < mapping.length; index++) {
+                    var innerMapping = mapping[index];
+                    var innerWording = _VBA_mapParse(innerMapping, VDict);
 
-                if (innerWording !== null) {
-                    if (wording === null) {
-                        wording = innerWording;
-                    } else {
-                        wording = wording + ";" + innerWording;
+                    if (innerWording !== null) {
+                        if (wording === null) {
+                            wording = innerWording;
+                        } else {
+                            wording = wording + ";" + innerWording;
+                        }
                     }
                 }
             }
-        }
-        
-        if (calculation.length !== 0) {
-            for (let index = 0; index < calculation.length; index++) {
-                var innerCalculation = calculation[index];
-                var innerWording = _VBA_calculationParse(innerCalculation, VDict);
+            
+            if (calculation.length !== 0) {
+                for (let index = 0; index < calculation.length; index++) {
+                    var innerCalculation = calculation[index];
+                    var innerWording = _VBA_calculationParse(innerCalculation, VDict);
 
-                if (innerWording !== null) {
-                    if (wording === null) {
-                        wording = innerWording;
-                    } else {
-                        wording = wording + ";" + innerWording;
+                    if (innerWording !== null) {
+                        if (wording === null) {
+                            wording = innerWording;
+                        } else {
+                            wording = wording + ";" + innerWording;
+                        }
                     }
                 }
             }
-        }
 
-        return wording;
+            return wording;
+        }
+    } catch (error) {
+        // console.error("Error in VBA_FORMULA_ALERT:", error);
+        console.log('Error in VBA_FORMULA_ALERT: ' + error.message);
+        return null;
     }
 }
