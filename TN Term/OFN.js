@@ -962,7 +962,9 @@ true],
 "Has the Employee's Address Changed?* - Address:*":{
 "Source Key in IFN":"",
 "Mapping":[
-]
+[
+"Has the Employee's Address Changed?* - Address:*",
+false]]
 ,
 "Calculation":[
 ]
@@ -974,7 +976,9 @@ true],
 "Has the Employee's Address Changed?* - City:*":{
 "Source Key in IFN":"",
 "Mapping":[
-]
+[
+"Has the Employee's Address Changed?* - City:*",
+false]]
 ,
 "Calculation":[
 ]
@@ -986,7 +990,9 @@ true],
 "Has the Employee's Address Changed?* - State:*":{
 "Source Key in IFN":"",
 "Mapping":[
-]
+[
+"Has the Employee's Address Changed?* - State:*",
+false]]
 ,
 "Calculation":[
 ]
@@ -998,7 +1004,9 @@ true],
 "Has the Employee's Address Changed?* - Zip Code:*":{
 "Source Key in IFN":"",
 "Mapping":[
-]
+[
+"Has the Employee's Address Changed?* - Zip Code:*",
+false]]
 ,
 "Calculation":[
 ]
