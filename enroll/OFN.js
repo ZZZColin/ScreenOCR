@@ -1655,7 +1655,7 @@ false]]
 ]
 ,
 "Format":{
-"Date Format":"MM/DD/YYYY"}
+}
 }
 ,
 "Dental Coverage Type:*":{
